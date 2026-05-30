@@ -1,0 +1,62 @@
+# ──────────────────────────────────────────────
+# Render Blueprint  –  render.yaml
+# Defines all services for one-click deployment
+# Docs: https://render.com/docs/blueprint-spec
+# ──────────────────────────────────────────────
+
+databases:
+  # Managed PostgreSQL instance
+  - name: recruitment-db
+    plan: free          # change to "starter" or higher for production
+    databaseName: aiotics
+    user: aiotics_user
+
+services:
+  # ─── Backend (Flask API) ───────────────────
+  - type: web
+    name: recruitment-backend
+    runtime: python
+    plan: free          # change to "starter" or higher for production
+    rootDir: backend
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.7
+      - key: DB_USER
+        fromDatabase:
+          name: recruitment-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: recruitment-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: recruitment-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: recruitment-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: recruitment-db
+          property: database
+
+  # ─── Frontend (React / Vite Static Site) ───
+  - type: web
+    name: recruitment-frontend
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: chmod +x build.sh && ./build.sh
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+    routes:
+      # SPA fallback – serves index.html for all routes (react-router)
+      - type: rewrite
+        source: /*
+        destination: /index.html

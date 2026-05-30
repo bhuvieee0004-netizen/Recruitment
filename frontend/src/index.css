@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cyber-darker text-white font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-cyber-dark/60 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl;
+  }
+  .input-field {
+    @apply w-full bg-cyber-darker/50 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-cyber-blue focus:ring-1 focus:ring-cyber-blue transition-colors;
+  }
+  .btn-primary {
+    @apply bg-cyber-blue text-cyber-darker font-semibold py-3 px-8 rounded-lg hover:bg-cyber-blue/90 hover:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all duration-300;
+  }
+}

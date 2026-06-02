@@ -44,8 +44,9 @@ export default function ApplicationPage() {
     }
 
     try {
-      // Point this to your backend running on port 5000
-      const response = await fetch('http://localhost:5000/api/apply', {
+      // Use VITE_API_URL environment variable for production (Render), fallback to relative path for dev proxy
+      const apiBaseUrl = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${apiBaseUrl}/api/apply`, {
         method: 'POST',
         body: data,
       });
